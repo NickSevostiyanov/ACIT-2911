@@ -497,35 +497,3 @@ td.empty {
   td.empty .task-container {
     display: none;
   }  
-
-  h1 i.bx-calendar {
-    font-size: 3rem;
-    vertical-align:middle;
-}
-
-#task-icon {
-    margin-left: 8px;
-    font-size: 1.2em;
-    vertical-align: middle;
-    color: #6e8efb; /* Matching your theme color */
-    transition: transform 0.3s ease;
-}
-
-#task-icon:hover {
-    transform: scale(1.2);
-    color: #a777e3; /* Secondary color from your gradient */
-}
-
-#calendarTask {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: all 0.3s ease;
-    margin-left: 1rem;
-}

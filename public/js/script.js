@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     makeModalDraggable();
 
     renderCalender()
-
+    showNotifications()
 
 });
 
@@ -123,7 +123,6 @@ function makeModalDraggable() {
 }
 
 
-
 // ---------
 // Task List
 function updateTaskList(cell) {
@@ -147,33 +146,16 @@ function updateTaskList(cell) {
         eventList[yearMonth][cellDate].events.forEach((taskObj, index) => {
 
             const listItem = document.createElement("li");
-
-            const inputLabel = document.createElement("input");
-
-            inputLabel.className = "tt"
-            inputLabel.disabled = "true"
-            inputLabel.value = `${taskObj.text}`;
-
+            listItem.textContent = `${taskObj.text}`;
 
             // Add delete button
             const deleteBtn = document.createElement("button");
-            deleteBtn.className = "deleteBtn"
             deleteBtn.textContent = "🗑";
             deleteBtn.style.marginLeft = "10px";
             deleteBtn.style.background = "red";
             deleteBtn.style.color = "white";
             deleteBtn.style.border = "none";
             deleteBtn.style.cursor = "pointer";
-
-            // Add edit button
-            const editBtn = document.createElement("button");
-            editBtn.className = "editBtn"
-            editBtn.textContent = "E";
-            editBtn.style.marginLeft = "10px";
-            editBtn.style.background = "red";
-            editBtn.style.color = "white";
-            editBtn.style.border = "none";
-            editBtn.style.cursor = "pointer";
 
             // Remove task on click
             deleteBtn.addEventListener("click", () => {
@@ -182,103 +164,10 @@ function updateTaskList(cell) {
 
                 console.log("delete test: ", eventList);
 
-                fetch('/api/saveTasks', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(eventList)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Saved to server:", data);
-                    })
-                    .catch(err => {
-                        console.error("Error saving tasks:", err);
-                    });
-
                 updateTaskList(cell);
             });
 
-
-
-            editBtn.addEventListener("click", (event) => {
-
-                console.log(event.target.parentElement, event.target.parentElement.children.length);
-
-                if (event.target.parentElement.children.length >= 4) {
-                    return
-                }
-
-                inputLabel.removeAttribute("disabled");
-
-                const confirmCallback = (event, initialVal) => {
-
-                    // if change
-                    if (inputLabel.value != initialVal) {
-                        eventList[yearMonth][cellDate].events[index].text = inputLabel.value
-                        cell.lastElementChild.children[index].innerText = inputLabel.value
-
-                        console.log("Editing task");
-
-                        fetch('/api/saveTasks', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(eventList)
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log("Saved to server:", data);
-                            })
-                            .catch(err => {
-                                console.error("Error saving tasks:", err);
-                            });
-
-                    }
-                    inputLabel.disabled = "true";
-                    event.target.parentElement.remove()
-
-                }
-
-
-
-                const confirmBtn = document.createElement("button");
-                confirmBtn.innerText = "Y"
-                confirmBtn.addEventListener("click", (e) => { confirmCallback(e, taskObj.text) })
-
-                const cancelBtn = document.createElement("button");
-                cancelBtn.innerText = "X"
-
-
-                const cancelCallback = (event, initialVal) => {
-                    // change draggable and eventlist item name
-                    console.log("gabba gool", event, event.target, initialVal);
-
-                    inputLabel.value = initialVal;
-                    inputLabel.disabled = "true";
-
-                    // destroys new buttons at end
-                    console.log("kill", event.target.parentElement.remove());
-
-                }
-
-                cancelBtn.addEventListener("click", (e) => { cancelCallback(e, taskObj.text) })
-
-
-
-
-                const div = document.createElement("div");
-
-                div.appendChild(confirmBtn)
-                div.appendChild(cancelBtn)
-
-                listItem.appendChild(div)
-
-            });
-
-            listItem.appendChild(inputLabel)
-
             listItem.appendChild(deleteBtn);
-            listItem.appendChild(editBtn)
-
             taskList.appendChild(listItem);
         });
     } else {
@@ -286,7 +175,6 @@ function updateTaskList(cell) {
     }
 
 }
-
 
 
 async function saveEvent() {
@@ -458,16 +346,6 @@ function stopDragging() {
 const renderCalender = async (date) => {
     const loadEvents = await fetch('/api/tasks');
     eventList = await loadEvents.json();
-    console.log(eventList);
-
-    let notifs = document.querySelector("#notif-box")
-
-    if (notifs.children.length == 0) {
-        showNotifications()
-
-    }
-
-
 
     // Sets current date to input or defaults to current date
     currentDate = (typeof date === 'undefined') ? new Date() : new Date(date)
@@ -600,40 +478,41 @@ document.addEventListener("DOMContentLoaded", () => {
 const showNotifications = () => {
 
     // test event list
-    // const eventList = {
-    //     "2025-5": {
-    //         16: {
-    //             events: [
-    //                 {
-    //                     text: "Wizard Final",
-    //                     color: "rgba()"
-    //                 }
-    //             ]
-    //         },
-    //         17: {
-    //             events: [
-    //                 {
-    //                     text: "Tethics Final"
-    //                 }
-    //             ]
-    //         }
-    //     },
-    //     "2025-6": {
-    //         1: {
-    //             events: [
-    //                 { text: "PE Final" }
-    //             ]
-    //         },
-    //         9: {
-    //             events: [
-    //                 { text: "War Quiz" }
-    //             ]
-    //         },
-    //     }
-    // }
+    const eventList = {
+        "2025-5": {
+            16: {
+                events: [
+                    {
+                        text: "Wizard Final",
+                        color: "rgba()"
+                    }
+                ]
+            },
+            17: {
+                events: [
+                    {
+                        text: "Tethics Final"
+                    }
+                ]
+            }
+        },
+        "2025-6": {
+            1: {
+                events: [
+                    { text: "PE Final" }
+                ]
+            },
+            9: {
+                events: [
+                    { text: "War Quiz" }
+                ]
+            },
+        }
+    }
+    
 
-
-
+    let modal = document.querySelector("#notifcation-modal")
+    modal.style.display ="block"
 
 
     // variable that checks events that are due in x days
@@ -641,15 +520,15 @@ const showNotifications = () => {
 
     const currentDate = new Date()
 
-
-
     let yearMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
-    console.log(eventList);
 
+    // checks if there are notifications
+    if (typeof eventList[yearMonth] == "undefined" || Object.keys(eventList[yearMonth]).length == 0) {
+        console.log("No notifs", Object.keys(eventList).length > 0);
+        return
 
-
-
+    }
 
 
     let dueShit = []
@@ -677,18 +556,6 @@ const showNotifications = () => {
 
 
     let notifsBox = document.querySelector("#notif-box")
-
-    // checks if there are notifications
-
-    console.log(typeof eventList[yearMonth] == "undefined", dueShit.length == 0);
-
-    if (typeof eventList[yearMonth] == "undefined" || dueShit.length == 0) {
-        console.log("No notifs", Object.keys(eventList).length);
-        return
-
-    }
-    let modal = document.querySelector("#notifcation-modal")
-    modal.style.display = "block"
 
     // adding items to modal
     dueShit.forEach(course => {

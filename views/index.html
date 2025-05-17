@@ -13,13 +13,13 @@
 <body>
     <header class="navbar">
         <button class="back-button" onclick="goBack()">Back</button>
-        <a href="/task.html"><button id="calendarTask">Task</button></a>
+        <span id="routeDisplay">/index</span>
         <label for="backgroundColorPicker">Background:</label>
         <input type="color" id="backgroundColorPicker">
     </header>
 
     <header>
-        <h1><i class='bx bx-calendar'></i> Mote</h1>
+        <h1>Mote</h1>
     </header>
     <main>
         <h2 id="month-year">
@@ -304,7 +304,6 @@
                 <span onclick="closeModal()" class="close-btn">✖</span>
             </div>
             <div class="modal-content">
-                
                 <label for="eventInput">Event:</label>
                 <input type="text" id="eventInput">
 
